@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de Arrendamiento - Estudio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Tema Oscuro (Por defecto) */
+            --bg-body: #09090b;
+            --bg-card: #18181b;
+            --bg-input: #27272a;
+            --border-color: #3f3f46;
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --accent-primary: #ff7300;
+            --accent-hover: #e66a00;
+            --accent-secondary: #9f4937;
+            --error-color: #ef4444;
+            --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            --icon-color: #f4f4f5;
+        }
+
+        body.light-mode {
+            /* Tema Claro */
+            --bg-body: #f4f4f5;
+            --bg-card: #ffffff;
+            --bg-input: #f4f4f5;
+            --border-color: #e4e4e7;
+            --text-main: #27272a;
+            --text-muted: #71717a;
+            --shadow-card: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+            --icon-color: #27272a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 650px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            box-shadow: var(--shadow-card);
+            border-top: 6px solid var(--accent-primary);
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Controles de Tema */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--icon-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .sun-icon { display: none; }
+        .moon-icon { display: block; }
+        body.light-mode .sun-icon { display: block; }
+        body.light-mode .moon-icon { display: none; }
+
+        .step {
+            display: none;
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            padding: 30px;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Inputs y Formularios */
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(255, 115, 0, 0.15);
+        }
+
+        .form-input.error {
+            border-color: var(--error-color);
+            background-color: rgba(239, 68, 68, 0.05);
+        }
+
+        .error-msg {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 30px 40px 10px;
+            position: relative;
+        }
+
+        .progress-container::before {
+            content: '';
+            position: absolute;
+            top: 45px;
+            left: 55px;
+            right: 55px;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 1;
+        }
+
+        .progress-step {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-input);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            position: relative;
+            z-index: 2;
+            transition: all 0.4s ease;
+        }
+
+        .progress-step.active {
+            border-color: var(--accent-primary);
+            background: var(--accent-primary);
+            color: #fff;
+            box-shadow: 0 0 10px rgba(255, 115, 0, 0.4);
+        }
+
+        .progress-step.completed {
+            border-color: var(--accent-primary);
+            background: var(--bg-card);
+            color: var(--accent-primary);
+        }
+
+        /* Botones */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-primary);
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            box-shadow: 0 4px 12px rgba(255, 115, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-input);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-muted);
+        }
+
+        .calc-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background-color: var(--bg-input);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .calc-item:hover {
+            border-color: rgba(255, 115, 0, 0.5);
+        }
+
+        .calc-item.checked {
+            background-color: rgba(255, 115, 0, 0.05);
+            border-color: var(--accent-primary);
+        }
+
+        .calc-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent-primary);
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .calc-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .calc-title {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .calc-price {
+            color: var(--accent-primary);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .total-display {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-primary);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .total-display .label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .total-display .amount {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-top: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        
+        <!-- Botón de Cambio de Tema -->
+        <button id="theme-btn" class="theme-toggle" aria-label="Cambiar tema">
+            <!-- Icono de Luna (Modo Oscuro Activo) -->
+            <svg class="moon-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+            <!-- Icono de Sol (Modo Claro Activo) -->
+            <svg class="sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+        </button>
+
+        <div id="form-content">
+            <div class="text-center pt-8 px-6 pb-2">
+                <h1 class="text-2xl font-black uppercase tracking-tight mb-1">Solicitud de Arrendamiento</h1>
+                <p class="text-sm" style="color: var(--text-muted)">Proceso de Arrendamiento</p>
+            </div>
+
+            <!-- Indicadores de Progreso -->
+            <div class="progress-container" id="progress-bar">
+                <div class="progress-step active" data-step="1">1</div>
+                <div class="progress-step" data-step="2">2</div>
+                <div class="progress-step" data-step="3">3</div>
+                <div class="progress-step" data-step="4">4</div>
+            </div>
+
+            <form id="rentalForm" novalidate>
+                
+                <div class="step active" id="step-1">
+                    <h2 class="text-xl font-bold mb-6" style="color: var(--accent-primary);">1. Datos Personales</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label for="nombre">Nombre Completo *</label>
+                            <input type="text" id="nombre" name="Nombre" class="form-input req-step-1" placeholder="Ej. Juan Pérez">
+                            <div class="error-msg">Por favor ingresa tu nombre completo.</div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="id">Licencia / ID *</label>
+                                <input type="text" id="id" name="Identificacion" class="form-input req-step-1" placeholder="Número de ID">
+                                <div class="error-msg">Ingresa un ID válido.</div>
+                            </div>
+                            <div>
+                                <label for="telefono">Teléfono *</label>
+                                <input type="tel" id="telefono" name="Telefono" class="form-input req-step-1" placeholder="(XXX) XXX-XXXX">
+                                <div class="error-msg">Ingresa un teléfono válido.</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="email">Correo Electrónico *</label>
+                            <input type="email" id="email" name="Email" class="form-input req-step-1" placeholder="correo@ejemplo.com">
+                            <div class="error-msg">Ingresa un correo electrónico válido.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step" id="step-2">
+                    <h2 class="text-xl font-bold mb-6" style="color: var(--accent-primary);">2. Empleo e Ingresos</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label for="empresa">Lugar de Empleo Actual *</label>
+                            <input type="text" id="empresa" name="Empresa" class="form-input req-step-2" placeholder="Nombre de la compañía">
+                            <div class="error-msg">Ingresa tu lugar de empleo.</div>
+                        </div>
+
+                        <div>
+                            <label for="ingreso">Ingreso Mensual (Neto) *</label>
+                            <input type="number" id="ingreso" name="Ingreso_Mensual" class="form-input req-step-2" placeholder="Ej. 2500" min="0">
+                            <div class="error-msg">Ingresa tu ingreso mensual estimado.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step" id="step-3">
+                    <h2 class="text-xl font-bold mb-6" style="color: var(--accent-primary);">3. Detalles de Ocupación</h2>
+                    
+                    <div class="space-y-5">
+                        <div>
+                            <label for="duracion">Duración del Contrato Deseada *</label>
+                            <select id="duracion" name="Duracion" class="form-input req-step-3">
+                                <option value="" disabled selected>Selecciona plazo</option>
+                                <option value="Corto Plazo (< 6 meses)">Corto Plazo (Menos de 6 meses)</option>
+                                <option value="Largo Plazo (6m - 1 año)">Largo Plazo (6 meses a 1 año)</option>
+                            </select>
+                            <div class="error-msg">Selecciona una opción.</div>
+                        </div>
+                        <div>
+                            <label for="personas">Cantidad de Ocupantes *</label>
+                            <select id="personas" name="Ocupantes" class="form-input req-step-3">
+                                <option value="" disabled selected>Selecciona cantidad</option>
+                                <option value="1">1 persona (Solo yo)</option>
+                                <option value="2">2 personas</option>
+                            </select>
+                            <p class="text-xs mt-1" style="color: var(--accent-primary); font-weight: 500;">* El estudio está diseñado idealmente para 1 persona.</p>
+                            <div class="error-msg">Selecciona una opción.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step" id="step-4">
+                    <h2 class="text-xl font-bold mb-4" style="color: var(--accent-primary);">4. Personalización del Estudio</h2>
+                    
+                    <p class="text-sm p-3 rounded-lg border-l-4 mb-4" style="background-color: var(--bg-input); border-color: var(--accent-primary); color: var(--text-main);">
+                        <strong>Alquiler base mensual: $450</strong><br>
+Este estudio está diseñado para una persona. Incluye AAA y AEE, cocina reducida, baño completo, sofá cama, televisor de 32 pulgadas, estufa, perchero y abanico de techo. Se requiere un depósito de $500. <br><br>
+
+Contrato de un año: $450; seis meses o menos: $500; Mes a Mes: $550; Por Dia/Noche: $50.
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4" id="calculadora-extras">
+                        <label class="calc-item">
+                            <input type="checkbox" name="Extra_AC" value="Si" data-price="150">
+                            <div class="calc-info">
+                                <span class="calc-title">Aire Acond.</span>
+                                <span class="calc-price">+$150 / mes</span>
+                            </div>
+                        </label>
+                        <label class="calc-item">
+                            <input type="checkbox" name="Extra_Lavadora" value="Si" data-price="75">
+                            <div class="calc-info">
+                                <span class="calc-title">Lavadora</span>
+                                <span class="calc-price">+$75 / mes</span>
+                            </div>
+                        </label>
+                        <label class="calc-item">
+                            <input type="checkbox" name="Extra_Calentador" value="Si" data-price="75">
+                            <div class="calc-info">
+                                <span class="calc-title">Calentador Agua</span>
+                                <span class="calc-price">+$75 / mes</span>
+                            </div>
+                        </label>
+                        <label class="calc-item">
+                            <input type="checkbox" name="Extra_Nevera" value="Si" data-price="100">
+                            <div class="calc-info">
+                                <span class="calc-title">Nevera</span>
+                                <span class="calc-price">+$100 / mes</span>
+                            </div>
+                        </label>
+                        <label class="calc-item">
+                            <input type="checkbox" name="Extra_Microondas" value="Si" data-price="50">
+                            <div class="calc-info">
+                                <span class="calc-title">Microondas</span>
+                                <span class="calc-price">+$50 / mes</span>
+                            </div>
+                        </label>
+                        <label class="calc-item">
+                            <input type="checkbox" name="Extra_Internet" value="Si" data-price="50">
+                            <div class="calc-info">
+                                <span class="calc-title">Internet / Wi-Fi</span>
+                                <span class="calc-price">+$50 / mes</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- NUEVA ÁREA DE COMENTARIOS -->
+                    <div class="mb-4 mt-4">
+                        <label for="comentarios">Comentarios o Peticiones Adicionales</label>
+                        <textarea id="comentarios" name="Comentarios" class="form-input" rows="3" placeholder="Escribe aquí cualquier duda, nota o petición especial..."></textarea>
+                    </div>
+
+                    <div class="total-display">
+                        <div class="label">Renta Total Estimada</div>
+                        <div class="amount" id="precio-total">$450</div>
+                    </div>
+                    
+                    <input type="hidden" id="input-total" name="Total_Calculado" value="450">
+
+                    <div class="mt-6 flex items-start gap-3 p-4 rounded-lg" style="background-color: rgba(159, 73, 55, 0.1); border-left: 4px solid var(--accent-secondary);">
+                        <input type="checkbox" id="consentimiento" class="mt-1 w-5 h-5 cursor-pointer req-step-4" style="accent-color: var(--accent-primary);">
+                        <label for="consentimiento" class="text-xs font-normal m-0 cursor-pointer" style="color: var(--text-main);">
+                            <strong class="block mb-1">Consentimiento y Políticas:</strong>
+                            Certifico que la información es correcta. Entiendo que <strong>no se permiten mascotas</strong>, el <strong>uso de sustancias ilícitas está prohibido</strong> y existen restricciones de domicilio.
+                        </label>
+                    </div>
+                    <div class="error-msg text-center mt-2" id="error-consent">Debes aceptar las políticas para enviar la solicitud.</div>
+                </div>
+
+                <!-- Controles Inferiores -->
+                <div class="p-6 pt-0 mt-6 flex justify-between gap-4 border-t pt-6" style="border-color: var(--border-color);">
+                    <button type="button" id="btn-prev" class="btn btn-secondary flex-1" style="display: none;">Atrás</button>
+                    <button type="button" id="btn-next" class="btn btn-primary flex-1">Siguiente</button>
+                    <button type="submit" id="btn-submit" class="btn btn-primary flex-1" style="display: none;">Enviar Solicitud</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="success-screen" class="hidden p-10 text-center flex flex-col items-center justify-center min-h-[400px]">
+            <div class="w-20 h-20 rounded-full flex items-center justify-center mb-6" style="background-color: var(--accent-primary); color: #fff; box-shadow: 0 0 20px rgba(255,115,0,0.4);">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <h2 class="text-2xl font-black uppercase mb-2">¡Casi Listo!</h2>
+            <p class="mb-8 max-w-md" style="color: var(--text-muted);">
+                Se ha abierto tu aplicación de correo con los datos. Por favor, <strong>presiona "Enviar"</strong> en tu cliente de correo para completar el proceso.
+            </p>
+            <button type="button" onclick="location.reload()" class="btn btn-secondary">Nueva Solicitud</button>
+        </div>
+    </div>
+
+    <script>
+        // Lógica del Tema (Claro / Oscuro)
+        const themeBtn = document.getElementById('theme-btn');
+        const body = document.body;
+
+        // Revisar preferencia guardada o sistema
+        if (localStorage.getItem('theme') === 'light') {
+            body.classList.add('light-mode');
+        }
+
+        themeBtn.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            if (body.classList.contains('light-mode')) {
+                localStorage.setItem('theme', 'light');
+            } else {
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Variables de Estado del Wizard
+        let currentStep = 1;
+        const totalSteps = 4;
+        const baseRent = 450;
+
+        // Elementos DOM
+        const steps = document.querySelectorAll('.step');
+        const progressSteps = document.querySelectorAll('.progress-step');
+        const btnNext = document.getElementById('btn-next');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnSubmit = document.getElementById('btn-submit');
+        const form = document.getElementById('rentalForm');
+        
+        // Elementos de la Calculadora
+        const calcCheckboxes = document.querySelectorAll('.calc-item input[type="checkbox"]');
+        const totalDisplay = document.getElementById('precio-total');
+        const inputTotal = document.getElementById('input-total');
+
+        function updateUI() {
+            // Mostrar paso actual
+            steps.forEach((step, index) => {
+                step.classList.toggle('active', index + 1 === currentStep);
+            });
+
+            // Actualizar barra de progreso
+            progressSteps.forEach((prog, index) => {
+                prog.classList.remove('active', 'completed');
+                if (index + 1 < currentStep) {
+                    prog.classList.add('completed');
+                } else if (index + 1 === currentStep) {
+                    prog.classList.add('active');
+                }
+            });
+
+            // Visibilidad de botones
+            btnPrev.style.display = currentStep === 1 ? 'none' : 'block';
+            
+            if (currentStep === totalSteps) {
+                btnNext.style.display = 'none';
+                btnSubmit.style.display = 'block';
+            } else {
+                btnNext.style.display = 'block';
+                btnSubmit.style.display = 'none';
+            }
+        }
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function validateStep(stepNum) {
+            let isValid = true;
+            const inputs = document.querySelectorAll(`.req-step-${stepNum}`);
+            
+            inputs.forEach(input => {
+                const errorMsg = input.nextElementSibling || document.getElementById(`error-${input.id}`);
+                
+                if (input.type === 'checkbox') {
+                    if (!input.checked) {
+                        isValid = false;
+                        if(errorMsg) errorMsg.style.display = 'block';
+                    } else {
+                        if(errorMsg) errorMsg.style.display = 'none';
+                    }
+                } else if (!input.value.trim()) {
+                    isValid = false;
+                    input.classList.add('error');
+                    if(errorMsg && errorMsg.classList.contains('error-msg')) errorMsg.style.display = 'block';
+                } else if (input.type === 'email' && !validateEmail(input.value)) {
+                    isValid = false;
+                    input.classList.add('error');
+                    if(errorMsg && errorMsg.classList.contains('error-msg')) {
+                        errorMsg.textContent = "Formato de correo inválido.";
+                        errorMsg.style.display = 'block';
+                    }
+                } else {
+                    input.classList.remove('error');
+                    if(errorMsg && errorMsg.classList.contains('error-msg')) errorMsg.style.display = 'none';
+                }
+            });
+
+            return isValid;
+        }
+
+        // Limpiar errores al escribir
+        document.querySelectorAll('input, select, textarea').forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('error');
+                const err = this.nextElementSibling;
+                if (err && err.classList.contains('error-msg')) err.style.display = 'none';
+            });
+        });
+
+        // Eventos de Botones de Navegación
+        btnNext.addEventListener('click', () => {
+            if (validateStep(currentStep)) {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    updateUI();
+                }
+            }
+        });
+
+        btnPrev.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateUI();
+            }
+        });
+
+        function calculateTotal() {
+            let total = baseRent;
+            
+            calcCheckboxes.forEach(cb => {
+                const parent = cb.closest('.calc-item');
+                if (cb.checked) {
+                    total += parseInt(cb.getAttribute('data-price'));
+                    parent.classList.add('checked');
+                } else {
+                    parent.classList.remove('checked');
+                }
+            });
+            
+            totalDisplay.textContent = '$' + total;
+            inputTotal.value = total;
+        }
+
+        calcCheckboxes.forEach(cb => {
+            cb.addEventListener('change', calculateTotal);
+        });
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if(!validateStep(4)) return;
+
+            // Construir Email
+            const emailDestino = 'rentstd.2026@gmail.com';
+            const asunto = encodeURIComponent('Nueva Solicitud de Arrendamiento - Estudio');
+            
+            let cuerpo = 'NUEVA SOLICITUD DE ALQUILER DE ESTUDIO\n';
+            cuerpo += '======================================\n\n';
+
+            // Recopilar Datos (Textos, números, selects, textareas)
+            const allInputs = form.querySelectorAll('input:not([type="checkbox"]), select, textarea');
+            allInputs.forEach(input => {
+                if (input.name && input.value) {
+                    cuerpo += `${input.name}: ${input.value}\n`;
+                }
+            });
+
+            cuerpo += '\n--- PERSONALIZACIÓN (EXTRAS) ---\n';
+            calcCheckboxes.forEach(check => {
+                if(check.checked) {
+                    cuerpo += `- ${check.closest('.calc-item').querySelector('.calc-title').innerText} (Agregado)\n`;
+                }
+            });
+
+            cuerpo += `\nRENTA TOTAL CALCULADA: $${inputTotal.value}/mes\n`;
+            
+            cuerpo += '\n--- CONSENTIMIENTO ---\n';
+            cuerpo += 'Políticas Aceptadas (Sin mascotas, sin sustancias ilícitas): SÍ\n';
+
+            const mailtoLink = `mailto:${emailDestino}?subject=${asunto}&body=${encodeURIComponent(cuerpo)}`;
+            
+            // Abrir cliente de correo
+            window.location.href = mailtoLink;
+
+            // Mostrar pantalla de éxito
+            document.getElementById('form-content').style.display = 'none';
+            document.getElementById('success-screen').classList.remove('hidden');
+        });
+
+        // Inicializar UI
+        updateUI();
+    </script>
+</body>
+</html>
