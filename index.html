@@ -27,17 +27,17 @@
         :root {
             --bg-body: #09090b;
             --bg-card: #18181b;
-        --bg-input: #27272a;
-        --border-color: #3f3f46;
-        --text-main: #f4f4f5;
-        --text-muted: #a1a1aa;
-        --accent-primary: #a3533d;
-        --accent-hover: #8f4533;
-        --accent-secondary: #9f4937;
-        --error-color: #ef4444;
-        --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        --icon-color: #f4f4f5;
-        --safe-area-top: env(safe-area-inset-top, 0px);
+            --bg-input: #27272a;
+            --border-color: #3f3f46;
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --accent-primary: #a3533d;
+            --accent-hover: #8f4533;
+            --accent-secondary: #9f4937;
+            --error-color: #ef4444;
+            --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            --icon-color: #f4f4f5;
+            --safe-area-top: env(safe-area-inset-top, 0px);
             --safe-area-bottom: env(safe-area-inset-bottom, 0px);
         }
 
@@ -359,6 +359,19 @@
                 <p class="text-xs sm:text-sm mt-0.5" style="color: var(--text-muted)">Evaluación y Reserva de Estudio</p>
             </div>
 
+            <!-- Video del Estudio Integrado con opción de ampliar -->
+            <div class="px-5 pt-3">
+                <div id="openVideoModal" class="relative cursor-pointer group overflow-hidden rounded-xl border border-[var(--border-color)] shadow-md">
+                    <video src="ESTUDIO.mp4" autoplay loop muted playsinline class="w-full h-48 sm:h-56 object-cover transition-transform duration-300 group-hover:scale-105"></video>
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                        <span class="bg-black/60 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-md flex items-center gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+                            Ampliar video
+                        </span>
+                    </div>
+                </div>
+            </div>
+
             <div class="progress-container" id="progress-bar">
                 <div class="progress-step active" data-step="1">1</div>
                 <div class="progress-step" data-step="2">2</div>
@@ -372,7 +385,7 @@
                 <div class="step active" id="step-1">
                     <h2 class="text-lg font-bold mb-4 flex items-center gap-2" style="color: var(--accent-primary);">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                        1. Datos Personales
+                        1. Datos del Solicitante 
                     </h2>
                     
                     <div class="space-y-4">
@@ -418,7 +431,7 @@
                         </div>
 
                         <div>
-                            <label for="ingreso">Ingreso Mensual estimado ($) *</label>
+                            <label for="ingreso">Ingreso Mensual Neto ($) *</label>
                             <input type="number" id="ingreso" name="Ingreso_Mensual" inputmode="numeric" class="form-input req-step-2" placeholder="Ej. 2200" min="0">
                             <div class="error-msg">Ingresa tu ingreso mensual neto.</div>
                         </div>
@@ -451,7 +464,7 @@
                                 <option value="1 persona (Principal)">1 persona (Solo yo)</option>
                                 <option value="2 personas">2 personas</option>
                             </select>
-                            <p class="text-xs mt-1.5 font-semibold" style="color: var(--accent-primary);">* Nota: El estudio está acondicionado idealmente para 1 persona.</p>
+                            <p class="text-xs mt-1.5 font-semibold" style="color: var(--accent-primary);">* Nota: El estudio está perfectamente acondicionado para una persona; para dos, habría que buscar la manera de organizarse. Abierto a negociar.</p>
                             <div class="error-msg">Selecciona la cantidad de ocupantes.</div>
                         </div>
                     </div>
@@ -473,7 +486,7 @@
                         <label class="calc-item">
                             <input type="checkbox" name="Extra_AC" value="Aire Acondicionado (+$150)" data-price="150" data-label="Aire Acondicionado">
                             <div class="calc-info">
-                                <span class="calc-title text-xs sm:text-sm">Aire Acond.</span>
+                                <span class="calc-title text-xs sm:text-sm">Aire Acondicionado.</span>
                                 <span class="calc-price">+$150 / mes</span>
                             </div>
                         </label>
@@ -485,9 +498,9 @@
                             </div>
                         </label>
                         <label class="calc-item">
-                            <input type="checkbox" name="Extra_Calentador" value="Calentador de Agua (+$75)" data-price="75" data-label="Calentador de Agua">
+                            <input type="checkbox" name="Extra_Calentador" value="Calentador de Ducha (+$75)" data-price="75" data-label="Calentador de Agua">
                             <div class="calc-info">
-                                <span class="calc-title text-xs sm:text-sm">Calentador</span>
+                                <span class="calc-title text-xs sm:text-sm">Calentador de Ducha</span>
                                 <span class="calc-price">+$75 / mes</span>
                             </div>
                         </label>
@@ -508,7 +521,7 @@
                         <label class="calc-item">
                             <input type="checkbox" name="Extra_Internet" value="Internet / Wi-Fi (+$50)" data-price="50" data-label="Wi-Fi / Internet">
                             <div class="calc-info">
-                                <span class="calc-title text-xs sm:text-sm">Wi-Fi / Inter.</span>
+                                <span class="calc-title text-xs sm:text-sm">Wi-Fi / Internet</span>
                                 <span class="calc-price">+$50 / mes</span>
                             </div>
                         </label>
@@ -530,7 +543,7 @@
                         <input type="checkbox" id="consentimiento" class="mt-0.5 w-5 h-5 rounded cursor-pointer req-step-4" style="accent-color: var(--accent-primary);">
                         <label for="consentimiento" class="text-xs font-normal m-0 cursor-pointer leading-tight" style="color: var(--text-main);">
                             <strong class="block mb-0.5 text-xs">Políticas y Consentimiento:</strong>
-                            Certifico que la información es cierta. Acepto que no se permiten mascotas y está prohibido el uso de sustancias ilícitas.
+                            Certifico que los datos provistos son correctos y veraz. Acepto la política de NO MASCOTAS. Por razones de espacio y tranquilidad comunitaria, no se permiten de ningún tipo. Acepto la estricta prohibición del uso o consumo de sustancias ilícitas en la propiedad.
                         </label>
                     </div>
                     <div class="error-msg text-center mt-2" id="error-consent">Debes aceptar los términos y políticas.</div>
@@ -556,7 +569,7 @@
             </div>
             <h2 class="text-2xl font-black uppercase mb-1">¡Solicitud Generada!</h2>
             <p class="text-xs sm:text-sm mb-6 max-w-xs" style="color: var(--text-muted);">
-                La información se ha compilado profesionalmente. Haz clic en el botón a continuación para abrir tu cliente de correo y enviar la solicitud:
+                La información se ha compilado. Haz clic en el botón a continuación para abrir tu cliente de correo y enviar la solicitud:
             </p>
             
             <div class="flex flex-col gap-3 w-full max-w-xs">
@@ -567,6 +580,18 @@
                 <button type="button" onclick="location.reload()" class="btn btn-secondary w-full">
                     Nueva Solicitud / Modificar
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Ampliar Video -->
+    <div id="videoModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-6">
+        <div class="relative w-full max-w-2xl bg-[var(--bg-card)] rounded-2xl overflow-hidden shadow-2xl border border-[var(--border-color)]">
+            <button id="closeVideoModal" class="absolute top-3 right-3 z-10 bg-black/60 hover:bg-black text-white w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-md">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="p-2 sm:p-4">
+                <video id="modalVideo" src="ESTUDIO.mp4" controls autoplay playsinline class="w-full max-h-[75vh] object-contain rounded-xl"></video>
             </div>
         </div>
     </div>
@@ -582,6 +607,36 @@
         themeBtn.addEventListener('click', () => {
             body.classList.toggle('light-mode');
             localStorage.setItem('theme', body.classList.contains('light-mode') ? 'light' : 'dark');
+        });
+
+        // Video Modal Logic
+        const openVideoTrigger = document.getElementById('openVideoModal');
+        const videoModal = document.getElementById('videoModal');
+        const closeVideoModal = document.getElementById('closeVideoModal');
+        const modalVideo = document.getElementById('modalVideo');
+
+        openVideoTrigger.addEventListener('click', () => {
+            videoModal.classList.remove('hidden');
+            modalVideo.currentTime = 0;
+            modalVideo.play();
+        });
+
+        function closeVideoModalFunc() {
+            videoModal.classList.add('hidden');
+            modalVideo.pause();
+        }
+
+        closeVideoModal.addEventListener('click', closeVideoModalFunc);
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) {
+                closeVideoModalFunc();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeVideoModalFunc();
+            }
         });
 
         // Wizard Logic
@@ -742,7 +797,7 @@
             body += `Fecha de Emisión: ${dateStr} a las ${timeStr}\n\n`;
 
             body += `-----------------------------------------------------------\n`;
-            body += ` 1. INFORMACIÓN DEL SOLICITANTE\n`;
+            body += ` 1. DATOS DEL SOLICITANTE\n`;
             body += `-----------------------------------------------------------\n`;
             body += `Nombre Completo : ${data.nombre}\n`;
             body += `Identificación  : ${data.id}\n`;
@@ -750,19 +805,19 @@
             body += `Correo Elect.   : ${data.email}\n\n`;
 
             body += `-----------------------------------------------------------\n`;
-            body += ` 2. ANTECEDENTES LABORALES Y FINANCIEROS\n`;
+            body += ` 2. EMPLEO E INGRESOS NETOS\n`;
             body += `-----------------------------------------------------------\n`;
             body += `Lugar de Trabajo: ${data.empresa}\n`;
             body += `Ingreso Mensual : $${data.ingreso} USD\n\n`;
 
             body += `-----------------------------------------------------------\n`;
-            body += ` 3. PARÁMETROS DE OCUPACIÓN\n`;
+            body += ` 3. DURACIÓN DE OCUPACIÓN Y OCUPANTES\n`;
             body += `-----------------------------------------------------------\n`;
             body += `Término Contrato: ${data.duracion}\n`;
             body += `Nº de Ocupantes : ${data.personas}\n\n`;
 
             body += `-----------------------------------------------------------\n`;
-            body += ` 4. PERSONALIZACIÓN Y SERVICIOS ADICIONALES\n`;
+            body += ` 4. PERSONALIZACIÓN Y EXTRAS ADICIONALES\n`;
             body += `-----------------------------------------------------------\n`;
             if (data.extras.length > 0) {
                 data.extras.forEach(item => {
@@ -782,15 +837,15 @@
             body += ` Renta Base Acordada        : $${data.rentaBase} USD\n`;
             body += ` Total Servicios Extras     : $${data.totalExtras} USD\n`;
             body += ` ---------------------------------------------------------\n`;
-            body += ` MONTO TOTAL ESTIMADO       : $${data.totalCalculado} USD / periodo\n`;
+            body += ` MONTO TOTAL       : $${data.totalCalculado} USD * Mes\n`;
             body += ` Depósito Requerido         : $500 USD\n\n`;
 
             body += `-----------------------------------------------------------\n`;
             body += ` 6. DECLARACIÓN Y ACEPTACIÓN DE TÉRMINOS\n`;
             body += `-----------------------------------------------------------\n`;
-            body += `[ACEPTADO] Certifico que los datos provistos son veraces.\n`;
-            body += `[ACEPTADO] Acepto la política de NO MASCOTAS.\n`;
-            body += `[ACEPTADO] Acepto la prohibición de sustancias ilícitas.\n\n`;
+            body += `[ACEPTADO] Certifico que los datos provistos son correctos y veraz.\n`;
+            body += `[ACEPTADO] Acepto la política de NO MASCOTAS. Por razones de espacio y tranquilidad comunitaria, no se permiten de ningún tipo.\n`;
+            body += `[ACEPTADO] Acepto la estricta prohibición del uso o consumo de sustancias ilícitas en la propiedad.\n\n`;
             body += `===========================================================\n`;
             body += `                  Alquiler Estudio PWA\n`;
             body += `===========================================================\n`;
@@ -839,14 +894,11 @@
             const mailSubject = `Solicitud de Arrendamiento - ${formData.nombre}`;
             const linkMailto = `mailto:${emailDestino}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
 
-            // Assign Link to Button & trigger mailto redirect
             const mailBtn = document.getElementById('btn-resend-mail');
             mailBtn.href = linkMailto;
             
-            // Automatically open default mail app
             window.location.href = linkMailto;
 
-            // Display Completion View
             document.getElementById('form-content').style.display = 'none';
             document.getElementById('success-screen').classList.remove('hidden');
         });
