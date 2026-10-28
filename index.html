@@ -425,15 +425,45 @@
                     
                     <div class="space-y-4">
                         <div>
-                            <label for="empresa">Lugar de Empleo Actual *</label>
+                            <label for="empresa">Nombre de Compañia y Lugar de Empleo Actual *</label>
                             <input type="text" id="empresa" name="Empresa" autocomplete="organization" class="form-input req-step-2" placeholder="Nombre de la empresa o negocio">
-                            <div class="error-msg">Ingresa tu lugar de empleo.</div>
+                            <div class="error-msg">Nombre de Compañia y lugar de Empleo Actual.</div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="cargo">Cargo o Puesto *</label>
+                                <input type="text" id="cargo" name="Cargo" class="form-input req-step-2" placeholder="Ej. Administrador, Asistente...">
+                                <div class="error-msg">Ingresa tu cargo o puesto.</div>
+                            </div>
+                            <div>
+                                <label for="tiempo_empleo">Tiempo en el Empleo *</label>
+                                <select id="tiempo_empleo" name="Tiempo_Empleo" class="form-input req-step-2">
+                                    <option value="" disabled selected>Selecciona tiempo</option>
+                                    <option value="Menos de 6 meses">Menos de 6 meses</option>
+                                    <option value="6 meses a 1 año">6 meses a 1 año</option>
+                                    <option value="1 a 3 años">1 a 3 años</option>
+                                    <option value="Más de 3 años">Más de 3 años</option>
+                                </select>
+                                <div class="error-msg">Selecciona el tiempo en el empleo.</div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="telefono_empleador">Teléfono del Empleador</label>
+                                <input type="tel" id="telefono_empleador" name="Telefono_Empleador" inputmode="tel" class="form-input" placeholder="(787) 000-0000">
+                            </div>
+                            <div>
+                                <label for="ingreso">Ingreso Mensual Neto ($) *</label>
+                                <input type="number" id="ingreso" name="Ingreso_Mensual" inputmode="numeric" class="form-input req-step-2" placeholder="Ej. 2200" min="0">
+                                <div class="error-msg">Ingresa tu ingreso mensual neto.</div>
+                            </div>
                         </div>
 
                         <div>
-                            <label for="ingreso">Ingreso Mensual Neto ($) *</label>
-                            <input type="number" id="ingreso" name="Ingreso_Mensual" inputmode="numeric" class="form-input req-step-2" placeholder="Ej. 2200" min="0">
-                            <div class="error-msg">Ingresa tu ingreso mensual neto.</div>
+                            <label for="ingresos_adicionales">Ingresos Adicionales / Otras Fuentes</label>
+                            <input type="text" id="ingresos_adicionales" name="Ingresos_Adicionales" class="form-input" placeholder="Ej. $300 por pensión, remesas, negocio propio...">
                         </div>
                     </div>
                 </div>
@@ -800,15 +830,22 @@
             body += ` 1. DATOS DEL SOLICITANTE\n`;
             body += `-----------------------------------------------------------\n`;
             body += `Nombre Completo : ${data.nombre}\n`;
-            body += `Identificación  : ${data.id}\n`;
-            body += `Teléfono Mobile : ${data.telefono}\n`;
-            body += `Correo Elect.   : ${data.email}\n\n`;
+            body += `Número de Licencia / ID  : ${data.id}\n`;
+            body += `Teléfono Mobil : ${data.telefono}\n`;
+            body += `Correo Electronico   : ${data.email}\n\n`;
 
             body += `-----------------------------------------------------------\n`;
             body += ` 2. EMPLEO E INGRESOS NETOS\n`;
             body += `-----------------------------------------------------------\n`;
-            body += `Lugar de Trabajo: ${data.empresa}\n`;
-            body += `Ingreso Mensual : $${data.ingreso} USD\n\n`;
+            body += `Nombre de Compañia y lugar de Empleo Actual : ${data.empresa}\n`;
+            body += `Cargo / Puesto   : ${data.cargo}\n`;
+            body += `Tiempo en Empleo : ${data.tiempoEmpleo}\n`;
+            body += `Telefono Empleador   : ${data.telefonoEmpleador || 'No especificado'}\n`;
+            body += `Ingreso Mensual  : $${data.ingreso} USD\n`;
+            if (data.ingresosAdicionales) {
+                body += `Ingresos Adic.   : ${data.ingresosAdicionales}\n`;
+            }
+            body += `\n`;
 
             body += `-----------------------------------------------------------\n`;
             body += ` 3. DURACIÓN DE OCUPACIÓN Y OCUPANTES\n`;
@@ -847,7 +884,7 @@
             body += `[ACEPTADO] Acepto la política de NO MASCOTAS. Por razones de espacio y tranquilidad comunitaria, no se permiten de ningún tipo.\n`;
             body += `[ACEPTADO] Acepto la estricta prohibición del uso o consumo de sustancias ilícitas en la propiedad.\n\n`;
             body += `===========================================================\n`;
-            body += `                  Alquiler Estudio PWA\n`;
+            body += `                  Alquiler Estudio 10 x 20\n`;
             body += `===========================================================\n`;
 
             return body;
@@ -880,7 +917,11 @@
                 telefono: document.getElementById('telefono').value.trim(),
                 email: document.getElementById('email').value.trim(),
                 empresa: document.getElementById('empresa').value.trim(),
+                cargo: document.getElementById('cargo').value.trim(),
+                tiempoEmpleo: document.getElementById('tiempo_empleo').value,
+                telefonoEmpleador: document.getElementById('telefono_empleador').value.trim(),
                 ingreso: document.getElementById('ingreso').value,
+                ingresosAdicionales: document.getElementById('ingresos_adicionales').value.trim(),
                 duracion: duracionText,
                 personas: document.getElementById('personas').value,
                 comentarios: document.getElementById('comentarios').value.trim(),
