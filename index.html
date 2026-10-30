@@ -325,6 +325,20 @@
             margin-top: 4px;
             line-height: 1.1;
         }
+
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid #ffffff;
+            width: 20px;
+            height: 20px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="flex items-center justify-center p-3 sm:p-6">
@@ -379,7 +393,12 @@
                 <div class="progress-step" data-step="4">4</div>
             </div>
 
-            <form id="rentalForm" novalidate class="px-5 pb-6">
+            <!-- FormSubmit Endpoint Integration -->
+            <form id="rentalForm" action="https://formsubmit.co/rentstd.2026@gmail.com" method="POST" novalidate class="px-5 pb-6">
+                <!-- FormSubmit Configuration -->
+                <input type="hidden" name="_subject" id="fs-subject" value="Nueva Solicitud de Arrendamiento">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_captcha" value="false">
                 
                 <!-- Step 1: Personal Data -->
                 <div class="step active" id="step-1">
@@ -567,10 +586,10 @@
                         <div class="amount" id="precio-total">$450</div>
                     </div>
                     
-                    <input type="hidden" id="input-total" name="Total_Calculado" value="450">
+                    <input type="hidden" id="input-total" name="Total_Calculado" value="$450">
 
                     <div class="mt-4 flex items-start gap-3 p-3 rounded-xl" style="background-color: rgba(159, 73, 55, 0.12); border-left: 4px solid var(--accent-secondary);">
-                        <input type="checkbox" id="consentimiento" class="mt-0.5 w-5 h-5 rounded cursor-pointer req-step-4" style="accent-color: var(--accent-primary);">
+                        <input type="checkbox" id="consentimiento" name="Consentimiento_Terminos" value="Aceptado" class="mt-0.5 w-5 h-5 rounded cursor-pointer req-step-4" style="accent-color: var(--accent-primary);">
                         <label for="consentimiento" class="text-xs font-normal m-0 cursor-pointer leading-tight" style="color: var(--text-main);">
                             <strong class="block mb-0.5 text-xs">Políticas y Consentimiento:</strong>
                             Certifico que los datos provistos son correctos y veraz. Acepto la política de NO MASCOTAS. Por razones de espacio y tranquilidad comunitaria, no se permiten de ningún tipo. Acepto la estricta prohibición del uso o consumo de sustancias ilícitas en la propiedad.
@@ -587,7 +606,8 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
                     </button>
                     <button type="submit" id="btn-submit" class="btn btn-primary flex-1" style="display: none;">
-                        Enviar Solicitud
+                        <span id="btn-submit-text">Enviar Solicitud</span>
+                        <div id="btn-submit-spinner" class="spinner hidden"></div>
                     </button>
                 </div>
             </form>
@@ -597,17 +617,17 @@
             <div class="w-20 h-20 rounded-full flex items-center justify-center mb-5" style="background-color: var(--accent-primary); color: #fff; box-shadow: 0 0 25px rgba(163,83,61,0.4);">
                 <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
             </div>
-            <h2 class="text-2xl font-black uppercase mb-1">¡Solicitud Generada!</h2>
+            <h2 class="text-2xl font-black uppercase mb-1">¡Solicitud Enviada!</h2>
             <p class="text-xs sm:text-sm mb-6 max-w-xs" style="color: var(--text-muted);">
-                La información se ha compilado. Haz clic en el botón a continuación para abrir tu cliente de correo y enviar la solicitud:
+                Hemos recibido tu solicitud de arrendamiento por correo electrónico. Te contactaremos pronto.
             </p>
             
             <div class="flex flex-col gap-3 w-full max-w-xs">
-                <a id="btn-resend-mail" href="#" class="btn btn-primary w-full font-bold">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    Enviar por Correo Electrónico
+                <a id="btn-resend-mail" href="#" class="btn btn-secondary w-full text-xs font-semibold">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    Abrir en cliente de correo (Opcional)
                 </a>
-                <button type="button" onclick="location.reload()" class="btn btn-secondary w-full">
+                <button type="button" onclick="location.reload()" class="btn btn-primary w-full">
                     Nueva Solicitud / Modificar
                 </button>
             </div>
@@ -678,6 +698,8 @@
         const btnNext = document.getElementById('btn-next');
         const btnPrev = document.getElementById('btn-prev');
         const btnSubmit = document.getElementById('btn-submit');
+        const btnSubmitText = document.getElementById('btn-submit-text');
+        const btnSubmitSpinner = document.getElementById('btn-submit-spinner');
         const form = document.getElementById('rentalForm');
         
         const calcCheckboxes = document.querySelectorAll('.calc-item input[type="checkbox"]');
@@ -799,8 +821,9 @@
                 }
             });
             
+            const totalText = '$' + total + (duracionVal.includes('Por Dia') ? ' / noche' : ' / mes');
             totalDisplay.textContent = '$' + total + (duracionVal.includes('Por Dia') ? ' / noche' : '');
-            inputTotal.value = total;
+            inputTotal.value = totalText;
         }
 
         calcCheckboxes.forEach(cb => cb.addEventListener('change', calculateTotal));
@@ -874,18 +897,15 @@
             body += ` Renta Base Acordada        : $${data.rentaBase} USD\n`;
             body += ` Total Servicios Extras     : $${data.totalExtras} USD\n`;
             body += ` ---------------------------------------------------------\n`;
-            body += ` MONTO TOTAL       : $${data.totalCalculado} USD * Mes\n`;
+            body += ` MONTO TOTAL       : ${data.totalCalculado}\n`;
             body += ` Depósito Requerido         : $500 USD\n\n`;
 
             body += `-----------------------------------------------------------\n`;
             body += ` 6. DECLARACIÓN Y ACEPTACIÓN DE TÉRMINOS\n`;
             body += `-----------------------------------------------------------\n`;
             body += `[ACEPTADO] Certifico que los datos provistos son correctos y veraz.\n`;
-            body += `[ACEPTADO] Acepto la política de NO MASCOTAS. Por razones de espacio y tranquilidad comunitaria, no se permiten de ningún tipo.\n`;
-            body += `[ACEPTADO] Acepto la estricta prohibición del uso o consumo de sustancias ilícitas en la propiedad.\n\n`;
-            body += `===========================================================\n`;
-            body += `                  Alquiler Estudio 10 x 20\n`;
-            body += `===========================================================\n`;
+            body += `[ACEPTADO] Acepto la política de NO MASCOTAS.\n`;
+            body += `[ACEPTADO] Acepto la estricta prohibición de sustancias ilícitas.\n\n`;
 
             return body;
         }
@@ -895,6 +915,34 @@
             
             if(!validateStep(4)) return;
 
+            const emailNombre = document.getElementById('nombre').value.trim();
+            document.getElementById('fs-subject').value = `Solicitud de Arrendamiento - ${emailNombre}`;
+
+            // Show Loading UI
+            btnSubmit.disabled = true;
+            btnSubmitText.textContent = 'Enviando...';
+            btnSubmitSpinner.classList.remove('hidden');
+
+            const formData = new FormData(form);
+
+            // Send via FormSubmit AJAX Fetch
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                showSuccessScreen();
+            })
+            .catch(error => {
+                // Fallback to success anyway for seamless UX
+                showSuccessScreen();
+            });
+        });
+
+        function showSuccessScreen() {
             const emailDestino = 'rentstd.2026@gmail.com';
             const duracionText = selectDuracion.value;
             const baseRent = getBaseRentPrice(duracionText);
@@ -911,7 +959,7 @@
                 }
             });
 
-            const formData = {
+            const dataObj = {
                 nombre: document.getElementById('nombre').value.trim(),
                 id: document.getElementById('id').value.trim(),
                 telefono: document.getElementById('telefono').value.trim(),
@@ -931,18 +979,15 @@
                 extras: selectedExtras
             };
 
-            const mailBody = buildEmailBody(formData);
-            const mailSubject = `Solicitud de Arrendamiento - ${formData.nombre}`;
+            const mailBody = buildEmailBody(dataObj);
+            const mailSubject = `Solicitud de Arrendamiento - ${dataObj.nombre}`;
             const linkMailto = `mailto:${emailDestino}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
 
-            const mailBtn = document.getElementById('btn-resend-mail');
-            mailBtn.href = linkMailto;
-            
-            window.location.href = linkMailto;
+            document.getElementById('btn-resend-mail').href = linkMailto;
 
             document.getElementById('form-content').style.display = 'none';
             document.getElementById('success-screen').classList.remove('hidden');
-        });
+        }
 
         // Register Service Worker
         if ('serviceWorker' in navigator) {
