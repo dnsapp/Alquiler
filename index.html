@@ -397,8 +397,10 @@
             <form id="rentalForm" action="https://formsubmit.co/rentstd.2026@gmail.com" method="POST" novalidate class="px-5 pb-6">
                 <!-- FormSubmit Configuration -->
                 <input type="hidden" name="_subject" id="fs-subject" value="Nueva Solicitud de Arrendamiento">
-                <input type="hidden" name="_template" value="table">
                 <input type="hidden" name="_captcha" value="false">
+                
+                <!-- Campo oculto para enviar la solicitud formateada al correo -->
+                <input type="hidden" name="Solicitud_Formateada" id="input-mensaje-completo">
                 
                 <!-- Step 1: Personal Data -->
                 <div class="step active" id="step-1">
@@ -854,16 +856,16 @@
             body += `-----------------------------------------------------------\n`;
             body += `Nombre Completo : ${data.nombre}\n`;
             body += `Número de Licencia / ID  : ${data.id}\n`;
-            body += `Teléfono Mobil : ${data.telefono}\n`;
-            body += `Correo Electronico   : ${data.email}\n\n`;
+            body += `Teléfono Móvil : ${data.telefono}\n`;
+            body += `Correo Electrónico   : ${data.email}\n\n`;
 
             body += `-----------------------------------------------------------\n`;
             body += ` 2. EMPLEO E INGRESOS NETOS\n`;
             body += `-----------------------------------------------------------\n`;
-            body += `Nombre de Compañia y lugar de Empleo Actual : ${data.empresa}\n`;
+            body += `Nombre de Compañía y lugar de Empleo Actual : ${data.empresa}\n`;
             body += `Cargo / Puesto   : ${data.cargo}\n`;
             body += `Tiempo en Empleo : ${data.tiempoEmpleo}\n`;
-            body += `Telefono Empleador   : ${data.telefonoEmpleador || 'No especificado'}\n`;
+            body += `Teléfono Empleador   : ${data.telefonoEmpleador || 'No especificado'}\n`;
             body += `Ingreso Mensual  : $${data.ingreso} USD\n`;
             if (data.ingresosAdicionales) {
                 body += `Ingresos Adic.   : ${data.ingresosAdicionales}\n`;
@@ -903,7 +905,7 @@
             body += `-----------------------------------------------------------\n`;
             body += ` 6. DECLARACIÓN Y ACEPTACIÓN DE TÉRMINOS\n`;
             body += `-----------------------------------------------------------\n`;
-            body += `[ACEPTADO] Certifico que los datos provistos son correctos y veraz.\n`;
+            body += `[ACEPTADO] Certifico que los datos provistos son correctos y veraces.\n`;
             body += `[ACEPTADO] Acepto la política de NO MASCOTAS.\n`;
             body += `[ACEPTADO] Acepto la estricta prohibición de sustancias ilícitas.\n\n`;
 
@@ -918,32 +920,7 @@
             const emailNombre = document.getElementById('nombre').value.trim();
             document.getElementById('fs-subject').value = `Solicitud de Arrendamiento - ${emailNombre}`;
 
-            // Show Loading UI
-            btnSubmit.disabled = true;
-            btnSubmitText.textContent = 'Enviando...';
-            btnSubmitSpinner.classList.remove('hidden');
-
-            const formData = new FormData(form);
-
-            // Send via FormSubmit AJAX Fetch
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => {
-                showSuccessScreen();
-            })
-            .catch(error => {
-                // Fallback to success anyway for seamless UX
-                showSuccessScreen();
-            });
-        });
-
-        function showSuccessScreen() {
-            const emailDestino = 'rentstd.2026@gmail.com';
+            // Recopilar datos para generar el texto estructurado del correo
             const duracionText = selectDuracion.value;
             const baseRent = getBaseRentPrice(duracionText);
 
@@ -960,7 +937,7 @@
             });
 
             const dataObj = {
-                nombre: document.getElementById('nombre').value.trim(),
+                nombre: emailNombre,
                 id: document.getElementById('id').value.trim(),
                 telefono: document.getElementById('telefono').value.trim(),
                 email: document.getElementById('email').value.trim(),
@@ -979,7 +956,36 @@
                 extras: selectedExtras
             };
 
+            // Inyectar el texto en el campo oculto antes de enviar por FormSubmit
             const mailBody = buildEmailBody(dataObj);
+            document.getElementById('input-mensaje-completo').value = mailBody;
+
+            // Show Loading UI
+            btnSubmit.disabled = true;
+            btnSubmitText.textContent = 'Enviando...';
+            btnSubmitSpinner.classList.remove('hidden');
+
+            const formData = new FormData(form);
+
+            // Send via FormSubmit AJAX Fetch
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                showSuccessScreen(dataObj, mailBody);
+            })
+            .catch(error => {
+                // Fallback a pantalla de éxito
+                showSuccessScreen(dataObj, mailBody);
+            });
+        });
+
+        function showSuccessScreen(dataObj, mailBody) {
+            const emailDestino = 'rentstd.2026@gmail.com';
             const mailSubject = `Solicitud de Arrendamiento - ${dataObj.nombre}`;
             const linkMailto = `mailto:${emailDestino}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
 
