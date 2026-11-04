@@ -501,7 +501,8 @@
                             <label for="duracion">Duración del Contrato Deseada *</label>
                             <select id="duracion" name="Duracion" class="form-input req-step-3">
                                 <option value="" disabled selected>Selecciona plazo de contrato</option>
-                                <option value="1 año ($450/mes)" data-base="450">1 Año ($450 / mes)</option>
+                                <option value="1año ($450/mes)" data-base="450">1 Año ($450 / mes)</option>
+				<option value="1 año ($550/mes)" data-base="550">1 Año ($550 / mes)</option>
                                 <option value="6 meses o menos ($500/mes)" data-base="500">6 meses o menos ($500 / mes)</option>
                                 <option value="Mes a Mes ($550/mes)" data-base="550">Mes a Mes ($550 / mes)</option>
                                 <option value="Por Dia/Noche ($50/noche)" data-base="50">Por Día / Noche ($50 / noche)</option>
@@ -530,22 +531,22 @@
                     
                     <div class="text-xs p-3.5 rounded-xl border-l-4 mb-3 leading-relaxed" style="background-color: var(--bg-input); border-color: var(--accent-primary); color: var(--text-main);">
                         <strong>Alquiler Base: $450/mes</strong><br>
-                        Incluye agua (AAA), luz (AEE), cocina reducida, baño completo, sofá cama, TV de 32", estufa, perchero y abanico de techo. Requiere depósito de $500.
+                        Incluye agua (AAA), luz (AEE), cocina reducida, baño completo, sofá cama, TV de 32", estufa, perchero, abanico de techo y puerta con codigo acceso. Requiere depósito de $500.
                     </div>
 
                     <div class="grid grid-cols-2 gap-2.5 mb-3" id="calculadora-extras">
                         <label class="calc-item">
-                            <input type="checkbox" name="Extra_AC" value="Aire Acondicionado (+$150)" data-price="150" data-label="Aire Acondicionado">
+                            <input type="checkbox" name="Extra_AC" value="Aire Acondicionado (+$200)" data-price="200" data-label="Aire Acondicionado">
                             <div class="calc-info">
-                                <span class="calc-title text-xs sm:text-sm">Aire Acondicionado.</span>
-                                <span class="calc-price">+$150 / mes</span>
+                                <span class="calc-title text-xs sm:text-sm">Aire Acondicionado</span>
+                                <span class="calc-price">+$200 / mes</span>
                             </div>
                         </label>
                         <label class="calc-item">
-                            <input type="checkbox" name="Extra_Lavadora" value="Lavadora (+$75)" data-price="75" data-label="Lavadora">
+                            <input type="checkbox" name="Extra_Lavadora" value="Lavadora (+$50)" data-price="50" data-label="Lavadora">
                             <div class="calc-info">
                                 <span class="calc-title text-xs sm:text-sm">Lavadora</span>
-                                <span class="calc-price">+$75 / mes</span>
+                                <span class="calc-price">+$50 / mes</span>
                             </div>
                         </label>
                         <label class="calc-item">
@@ -558,7 +559,7 @@
                         <label class="calc-item">
                             <input type="checkbox" name="Extra_Nevera" value="Nevera (+$100)" data-price="100" data-label="Nevera">
                             <div class="calc-info">
-                                <span class="calc-title text-xs sm:text-sm">Nevera</span>
+                                <span class="calc-title text-xs sm:text-sm">Upgrade Nevera</span>
                                 <span class="calc-price">+$100 / mes</span>
                             </div>
                         </label>
@@ -570,10 +571,10 @@
                             </div>
                         </label>
                         <label class="calc-item">
-                            <input type="checkbox" name="Extra_Internet" value="Internet / Wi-Fi (+$50)" data-price="50" data-label="Wi-Fi / Internet">
+                            <input type="checkbox" name="Extra_Internet" value="Wi-Fi / Internet (+$70)" data-price="70" data-label="Wi-Fi / Internet">
                             <div class="calc-info">
-                                <span class="calc-title text-xs sm:text-sm">Wi-Fi / Internet</span>
-                                <span class="calc-price">+$50 / mes</span>
+                                <span class="calc-title text-xs sm:text-sm">Internet Upgrade/Wi-Fi</span>
+                                <span class="calc-price">+$70 / mes</span>
                             </div>
                         </label>
                     </div>
@@ -803,7 +804,11 @@
             let baseRent = 450;
             const duracionVal = selectDuracion.value || '';
 
-            if (duracionVal.includes('6 meses')) {
+            if (duracionVal.includes('1año')) {
+                baseRent = 450;
+	    } else if (duracionVal.includes('1 año')) {
+                baseRent = 550;
+	    } else if (duracionVal.includes('6 meses')) {
                 baseRent = 500;
             } else if (duracionVal.includes('Mes a Mes')) {
                 baseRent = 550;
@@ -832,6 +837,8 @@
         selectDuracion.addEventListener('change', calculateTotal);
 
         function getBaseRentPrice(duracionText) {
+	    if (duracionText.includes('1año')) return 450;
+	    if (duracionText.includes('1 año')) return 550;
             if (duracionText.includes('6 meses')) return 500;
             if (duracionText.includes('Mes a Mes')) return 550;
             if (duracionText.includes('Por Dia')) return 50;
