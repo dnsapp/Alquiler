@@ -398,9 +398,10 @@
                 <!-- FormSubmit Configuration -->
                 <input type="hidden" name="_subject" id="fs-subject" value="Nueva Solicitud de Arrendamiento">
                 <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_template" value="table">
                 
                 <!-- Campo oculto para enviar la solicitud formateada al correo -->
-                <input type="hidden" name="🏠" id="input-mensaje-completo">
+                <input type="hidden" name="🏠 Resumen_Solicitud" id="input-mensaje-completo">
                 
                 <!-- Step 1: Personal Data -->
                 <div class="step active" id="step-1">
@@ -502,7 +503,7 @@
                             <select id="duracion" name="Duracion" class="form-input req-step-3">
                                 <option value="" disabled selected>Selecciona plazo de contrato</option>
                                 <option value="1 año ($450/mes)" data-base="450">1 Año ($450 / mes)</option>
-                                <option value="1 año opción B ($550/mes)" data-base="550">1 Año ($550 / mes)</option>
+                                <option value="1 año ($550/mes)" data-base="550">1 Año Opción B ($550 / mes)</option>
                                 <option value="6 meses o menos ($500/mes)" data-base="500">6 meses o menos ($500 / mes)</option>
                                 <option value="Mes a Mes ($550/mes)" data-base="550">Mes a Mes ($550 / mes)</option>
                                 <option value="Por Dia/Noche ($50/noche)" data-base="50">Por Día / Noche ($50 / noche)</option>
@@ -747,7 +748,6 @@
             const inputs = document.querySelectorAll(`.req-step-${stepNum}`);
             
             inputs.forEach(input => {
-                // Búsqueda robusta del mensaje de error asociado (dentro del contenedor o por ID específico)
                 const errorMsg = input.parentElement.querySelector('.error-msg') || document.getElementById(`error-${input.id}`);
                 
                 if (input.type === 'checkbox') {
@@ -778,16 +778,13 @@
         }
 
         document.querySelectorAll('input, select, textarea').forEach(input => {
-            input.addEventListener('input', function() {
+            const clearError = function() {
                 this.classList.remove('error');
                 const err = this.parentElement.querySelector('.error-msg') || document.getElementById(`error-${this.id}`);
                 if (err) err.style.display = 'none';
-            });
-            input.addEventListener('change', function() {
-                this.classList.remove('error');
-                const err = this.parentElement.querySelector('.error-msg') || document.getElementById(`error-${this.id}`);
-                if (err) err.style.display = 'none';
-            });
+            };
+            input.addEventListener('input', clearError);
+            input.addEventListener('change', clearError);
         });
 
         btnNext.addEventListener('click', () => {
@@ -973,10 +970,18 @@
                 }
             })
             .then(response => {
-                showSuccessScreen(dataObj, mailBody);
+                if (response.ok) {
+                    showSuccessScreen(dataObj, mailBody);
+                } else {
+                    alert('Atención: Ocurrió un error al procesar el envío. Revisa la configuración de FormSubmit.');
+                    btnSubmit.disabled = false;
+                    btnSubmitText.textContent = 'Enviar Solicitud';
+                    btnSubmitSpinner.classList.add('hidden');
+                }
             })
             .catch(error => {
-                showSuccessScreen(dataObj, mailBody);
+                // Si la petición vía AJAX falla por bloqueo CORS o red, recurre al envío nativo
+                form.submit();
             });
         });
 
