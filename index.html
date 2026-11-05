@@ -379,8 +379,8 @@
                 <div class="progress-step" data-step="4">4</div>
             </div>
 
-            <!-- FormSubmit Integration -->
-            <form id="rentalForm" action="https://formsubmit.co/rentstd.2026@gmail.com" method="POST" novalidate class="px-5 pb-6">
+            <!-- FormSubmit AJAX Integration -->
+            <form id="rentalForm" action="https://formsubmit.co/ajax/rentstd.2026@gmail.com" method="POST" novalidate class="px-5 pb-6">
                 
                 <!-- Campos de configuración para FormSubmit -->
                 <input type="hidden" name="_captcha" value="false">
@@ -909,10 +909,9 @@
         }
 
         form.addEventListener('submit', function(e) {
-            if (!validateStep(4)) {
-                e.preventDefault();
-                return;
-            }
+            e.preventDefault();
+            
+            if (!validateStep(4)) return;
 
             const emailDestino = 'rentstd.2026@gmail.com';
             const duracionText = selectDuracion.value;
@@ -953,26 +952,22 @@
             const mailBody = buildEmailBody(formData);
             const mailSubject = `Solicitud de Arrendamiento - ${formData.nombre}`;
 
-            // Actualizar campos FormSubmit
+            // Actualizar campos ocultos de FormSubmit
             document.getElementById('formsubmit-subject').value = mailSubject;
             document.getElementById('formsubmit-message').value = mailBody;
 
-            // Mantener respaldo mailto para el botón secundario
+            // Enlace de respaldo mailto para el botón secundario
             const linkMailto = `mailto:${emailDestino}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
             document.getElementById('btn-resend-mail').href = linkMailto;
 
-            // Envío en segundo plano mediante fetch a FormSubmit
-            e.preventDefault();
-            
+            // Envío AJAX mediante fetch a FormSubmit
             const submitData = new FormData(form);
 
-           fetch("https://formsubmit.co/ajax/rentstd.2026@gmail.com", {
-    method: 'POST',
-    body: submitData,
-    headers: {
-        'Accept': 'application/json'
-    }
-})
+            fetch("https://formsubmit.co/ajax/rentstd.2026@gmail.com", {
+                method: 'POST',
+                body: submitData,
+                headers: {
+                    'Accept': 'application/json'
                 }
             })
             .then(response => {
@@ -980,7 +975,7 @@
                 document.getElementById('success-screen').classList.remove('hidden');
             })
             .catch(error => {
-                // Si falla la red, permite el fallback tradicional abriendo el correo
+                // Respaldo por si falla la conexión de red
                 window.location.href = linkMailto;
                 document.getElementById('form-content').style.display = 'none';
                 document.getElementById('success-screen').classList.remove('hidden');
