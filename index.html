@@ -966,11 +966,13 @@
             
             const submitData = new FormData(form);
 
-            fetch(form.action, {
-                method: 'POST',
-                body: submitData,
-                headers: {
-                    'Accept': 'application/json'
+           fetch("https://formsubmit.co/ajax/rentstd.2026@gmail.com", {
+    method: 'POST',
+    body: submitData,
+    headers: {
+        'Accept': 'application/json'
+    }
+})
                 }
             })
             .then(response => {
