@@ -379,14 +379,16 @@
                 <div class="progress-step" data-step="4">4</div>
             </div>
 
-            <!-- ENVÍO DIRECTO SIN AJAX -->
-            <form id="rentalForm" action="https://formsubmit.co/rentstd.2026@gmail.com" method="POST" class="px-5 pb-6">
-                <!-- Configuración de FormSubmit -->
-                <input type="hidden" name="_subject" id="fs-subject" value="Nueva Solicitud de Arrendamiento">
+            <!-- FormSubmit AJAX Integration -->
+            <form id="rentalForm" action="https://formsubmit.co/ajax/9bcc320c03d2d89a97040456928913c6" method="POST" novalidate class="px-5 pb-6">
+                
+                <!-- Campos de configuración para FormSubmit -->
                 <input type="hidden" name="_captcha" value="false">
                 <input type="hidden" name="_template" value="table">
-                <input type="hidden" name="Resumen_Detallado" id="input-mensaje-completo">
-                
+                <input type="hidden" id="formsubmit-subject" name="_subject" value="Nueva Solicitud de Arrendamiento">
+                <!-- Campo con formato completo consolidado -->
+                <input type="hidden" id="formsubmit-message" name="message" value="">
+
                 <!-- Step 1: Personal Data -->
                 <div class="step active" id="step-1">
                     <h2 class="text-lg font-bold mb-4 flex items-center gap-2" style="color: var(--accent-primary);">
@@ -485,9 +487,9 @@
                         <div>
                             <label for="duracion">Duración del Contrato Deseada *</label>
                             <select id="duracion" name="Duracion" class="form-input req-step-3">
-                                <option value="" disabled selected>Selecciona plazo de contrato</option>
+                                 <option value="" disabled selected>Selecciona plazo de contrato</option>
                                 <option value="1 año ($450/mes)" data-base="450">1 Año ($450 / mes)</option>
-                                <option value="1 año opción B ($550/mes)" data-base="550">1 Año Opción B ($550 / mes)</option>
+                                <option value="1 año ($550/mes)" data-base="550">1 Año Opción B ($550 / mes)</option>
                                 <option value="6 meses o menos ($500/mes)" data-base="500">6 meses o menos ($500 / mes)</option>
                                 <option value="Mes a Mes ($550/mes)" data-base="550">Mes a Mes ($550 / mes)</option>
                                 <option value="Por Dia/Noche ($50/noche)" data-base="50">Por Día / Noche ($50 / noche)</option>
@@ -502,7 +504,7 @@
                                 <option value="2 personas">2 personas</option>
                             </select>
                             <p class="text-xs mt-1.5 font-semibold" style="color: var(--accent-primary);">* Nota: El estudio está perfectamente acondicionado para una persona; para dos, habría que buscar la manera de organizarse. Abierto a negociar.</p>
-                            <div class="error-msg" id="error-personas">Selecciona la cantidad de ocupantes.</div>
+                            <div class="error-msg">Selecciona la cantidad de ocupantes.</div>
                         </div>
                     </div>
                 </div>
@@ -516,14 +518,14 @@
                     
                     <div class="text-xs p-3.5 rounded-xl border-l-4 mb-3 leading-relaxed" style="background-color: var(--bg-input); border-color: var(--accent-primary); color: var(--text-main);">
                         <strong>Alquiler Base: $450/mes</strong><br>
-                        Incluye agua (AAA), luz (AEE), cocina reducida, baño completo, sofá cama, TV de 32", estufa, perchero, abanico de techo y puerta con codigo acceso. Requiere depósito de $500.
+                Incluye agua (AAA), luz (AEE), cocina reducida, baño completo, sofá cama, TV de 32", estufa, perchero, abanico de techo y puerta con codigo acceso. Requiere depósito de $500.
                     </div>
 
                     <div class="grid grid-cols-2 gap-2.5 mb-3" id="calculadora-extras">
                         <label class="calc-item">
                             <input type="checkbox" name="Extra_AC" value="Aire Acondicionado (+$200)" data-price="200" data-label="Aire Acondicionado">
                             <div class="calc-info">
-                                <span class="calc-title text-xs sm:text-sm">Aire Acondicionado</span>
+                                <span class="calc-title text-xs sm:text-sm">Aire Acondicionado.</span>
                                 <span class="calc-price">+$200 / mes</span>
                             </div>
                         </label>
@@ -556,7 +558,7 @@
                             </div>
                         </label>
                         <label class="calc-item">
-                            <input type="checkbox" name="Extra_Internet" value="Wi-Fi / Internet (+$70)" data-price="70" data-label="Wi-Fi / Internet">
+                            <input type="checkbox" name="Extra_Internet" value="Internet / Wi-Fi (+$70)" data-price="70" data-label="Wi-Fi / Internet">
                             <div class="calc-info">
                                 <span class="calc-title text-xs sm:text-sm">Internet Upgrade/Wi-Fi</span>
                                 <span class="calc-price">+$70 / mes</span>
@@ -574,16 +576,16 @@
                         <div class="amount" id="precio-total">$450</div>
                     </div>
                     
-                    <input type="hidden" id="input-total" name="Total_Calculado" value="$450">
+                    <input type="hidden" id="input-total" name="Total_Calculado" value="450">
 
                     <div class="mt-4 flex items-start gap-3 p-3 rounded-xl" style="background-color: rgba(159, 73, 55, 0.12); border-left: 4px solid var(--accent-secondary);">
-                        <input type="checkbox" id="consentimiento" name="Consentimiento_Terminos" value="Aceptado" class="mt-0.5 w-5 h-5 rounded cursor-pointer req-step-4" style="accent-color: var(--accent-primary);">
+                        <input type="checkbox" id="consentimiento" class="mt-0.5 w-5 h-5 rounded cursor-pointer req-step-4" style="accent-color: var(--accent-primary);">
                         <label for="consentimiento" class="text-xs font-normal m-0 cursor-pointer leading-tight" style="color: var(--text-main);">
                             <strong class="block mb-0.5 text-xs">Políticas y Consentimiento:</strong>
                             Certifico que los datos provistos son correctos y veraz. Acepto la política de NO MASCOTAS. Por razones de espacio y tranquilidad comunitaria, no se permiten de ningún tipo. Acepto la estricta prohibición del uso o consumo de sustancias ilícitas en la propiedad.
                         </label>
                     </div>
-                    <div class="error-msg text-center mt-2" id="error-consentimiento">Debes aceptar los términos y políticas.</div>
+                    <div class="error-msg text-center mt-2" id="error-consent">Debes aceptar los términos y políticas.</div>
                 </div>
 
                 <!-- Navigation Controls -->
@@ -593,9 +595,31 @@
                         Siguiente
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
                     </button>
-                    <button type="submit" id="btn-submit" class="btn btn-primary flex-1" style="display: none;">Enviar Solicitud</button>
+                    <button type="submit" id="btn-submit" class="btn btn-primary flex-1" style="display: none;">
+                        Enviar Solicitud
+                    </button>
                 </div>
             </form>
+        </div>
+
+        <div id="success-screen" class="hidden p-6 sm:p-8 text-center flex flex-col items-center justify-center min-h-[420px]">
+            <div class="w-20 h-20 rounded-full flex items-center justify-center mb-5" style="background-color: var(--accent-primary); color: #fff; box-shadow: 0 0 25px rgba(163,83,61,0.4);">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <h2 class="text-2xl font-black uppercase mb-1">¡Solicitud Generada!</h2>
+            <p class="text-xs sm:text-sm mb-6 max-w-xs" style="color: var(--text-muted);">
+                La información ha sido enviada exitosamente. También puedes abrir tu cliente de correo si deseas una copia local:
+            </p>
+            
+            <div class="flex flex-col gap-3 w-full max-w-xs">
+                <a id="btn-resend-mail" href="#" class="btn btn-primary w-full font-bold">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    Enviar por Correo Electrónico
+                </a>
+                <button type="button" onclick="location.reload()" class="btn btn-secondary w-full">
+                    Nueva Solicitud / Modificar
+                </button>
+            </div>
         </div>
     </div>
 
@@ -707,7 +731,7 @@
             const inputs = document.querySelectorAll(`.req-step-${stepNum}`);
             
             inputs.forEach(input => {
-                const errorMsg = input.parentElement.querySelector('.error-msg') || document.getElementById(`error-${input.id}`);
+                const errorMsg = input.nextElementSibling || document.getElementById(`error-${input.id}`);
                 
                 if (input.type === 'checkbox') {
                     if (!input.checked) {
@@ -719,17 +743,17 @@
                 } else if (!input.value.trim()) {
                     isValid = false;
                     input.classList.add('error');
-                    if(errorMsg) errorMsg.style.display = 'block';
+                    if(errorMsg && errorMsg.classList.contains('error-msg')) errorMsg.style.display = 'block';
                 } else if (input.type === 'email' && !validateEmail(input.value)) {
                     isValid = false;
                     input.classList.add('error');
-                    if(errorMsg) {
+                    if(errorMsg && errorMsg.classList.contains('error-msg')) {
                         errorMsg.textContent = "Formato de correo inválido.";
                         errorMsg.style.display = 'block';
                     }
                 } else {
                     input.classList.remove('error');
-                    if(errorMsg) errorMsg.style.display = 'none';
+                    if(errorMsg && errorMsg.classList.contains('error-msg')) errorMsg.style.display = 'none';
                 }
             });
 
@@ -737,13 +761,11 @@
         }
 
         document.querySelectorAll('input, select, textarea').forEach(input => {
-            const clearError = function() {
+            input.addEventListener('input', function() {
                 this.classList.remove('error');
-                const err = this.parentElement.querySelector('.error-msg') || document.getElementById(`error-${this.id}`);
-                if (err) err.style.display = 'none';
-            };
-            input.addEventListener('input', clearError);
-            input.addEventListener('change', clearError);
+                const err = this.nextElementSibling;
+                if (err && err.classList.contains('error-msg')) err.style.display = 'none';
+            });
         });
 
         btnNext.addEventListener('click', () => {
@@ -762,16 +784,23 @@
             }
         });
 
-        function getBaseRentPrice() {
-            const selectedOption = selectDuracion.options[selectDuracion.selectedIndex];
-            if (selectedOption && selectedOption.dataset.base) {
-                return parseInt(selectedOption.dataset.base);
-            }
-            return 450;
-        }
-
         function calculateTotal() {
-            let baseRent = getBaseRentPrice();
+            let baseRent = 450;
+            const selectedOption = selectDuracion.options[selectDuracion.selectedIndex];
+            
+            if (selectedOption && selectedOption.getAttribute('data-base')) {
+                baseRent = parseInt(selectedOption.getAttribute('data-base'));
+            } else {
+                const duracionVal = selectDuracion.value || '';
+                if (duracionVal.includes('6 meses')) {
+                    baseRent = 500;
+                } else if (duracionVal.includes('Mes a Mes') || duracionVal.includes('550/mes')) {
+                    baseRent = 550;
+                } else if (duracionVal.includes('Por Dia')) {
+                    baseRent = 50;
+                }
+            }
+
             let total = baseRent;
             
             calcCheckboxes.forEach(cb => {
@@ -784,41 +813,187 @@
                 }
             });
             
-            const duracionVal = selectDuracion.value || '';
-            const isPerDay = duracionVal.includes('Por Dia');
-            
-            const totalText = '$' + total + (isPerDay ? ' / noche' : ' / mes');
-            totalDisplay.textContent = '$' + total + (isPerDay ? ' / noche' : '');
-            inputTotal.value = totalText;
+            totalDisplay.textContent = '$' + total + (selectDuracion.value.includes('Por Dia') ? ' / noche' : '');
+            inputTotal.value = total;
         }
 
         calcCheckboxes.forEach(cb => cb.addEventListener('change', calculateTotal));
         selectDuracion.addEventListener('change', calculateTotal);
 
-        // Al enviar, se valida el último paso y se inyectan los datos consolidados en el input oculto
-        form.addEventListener('submit', function(e) {
-            if (!validateStep(4)) {
-                e.preventDefault();
-                return;
+        function getBaseRentPrice(duracionText) {
+            const selectedOption = selectDuracion.options[selectDuracion.selectedIndex];
+            if (selectedOption && selectedOption.getAttribute('data-base')) {
+                return parseInt(selectedOption.getAttribute('data-base'));
+            }
+            if (duracionText.includes('6 meses')) return 500;
+            if (duracionText.includes('Mes a Mes') || duracionText.includes('550/mes')) return 550;
+            if (duracionText.includes('Por Dia')) return 50;
+            return 450;
+        }
+
+        function buildEmailBody(data) {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('es-PR', { year: 'numeric', month: 'long', day: 'numeric' });
+            const timeStr = now.toLocaleTimeString('es-PR', { hour: '2-digit', minute: '2-digit' });
+            const reqID = 'REQ-' + Math.floor(100000 + Math.random() * 900000);
+
+            let body = `===========================================================\n`;
+            body += `         SOLICITUD FORMAL DE ARRENDAMIENTO\n`;
+            body += `                ESTUDIO RESIDENCIAL\n`;
+            body += `===========================================================\n\n`;
+            body += `ID Solicitud: ${reqID}\n`;
+            body += `Fecha de Emisión: ${dateStr} a las ${timeStr}\n\n`;
+
+            body += `-----------------------------------------------------------\n`;
+            body += ` 1. DATOS DEL SOLICITANTE\n`;
+            body += `-----------------------------------------------------------\n`;
+            body += `Nombre Completo : ${data.nombre}\n`;
+            body += `Número de Licencia / ID  : ${data.id}\n`;
+            body += `Teléfono Mobil : ${data.telefono}\n`;
+            body += `Correo Electronico   : ${data.email}\n\n`;
+
+            body += `-----------------------------------------------------------\n`;
+            body += ` 2. EMPLEO E INGRESOS NETOS\n`;
+            body += `-----------------------------------------------------------\n`;
+            body += `Nombre de Compañia y lugar de Empleo Actual : ${data.empresa}\n`;
+            body += `Cargo / Puesto   : ${data.cargo}\n`;
+            body += `Tiempo en Empleo : ${data.tiempoEmpleo}\n`;
+            body += `Telefono Empleador   : ${data.telefonoEmpleador || 'No especificado'}\n`;
+            body += `Ingreso Mensual  : $${data.ingreso} USD\n`;
+            if (data.ingresosAdicionales) {
+                body += `Ingresos Adic.   : ${data.ingresosAdicionales}\n`;
+            }
+            body += `\n`;
+
+            body += `-----------------------------------------------------------\n`;
+            body += ` 3. DURACIÓN DE OCUPACIÓN Y OCUPANTES\n`;
+            body += `-----------------------------------------------------------\n`;
+            body += `Término Contrato: ${data.duracion}\n`;
+            body += `Nº de Ocupantes : ${data.personas}\n\n`;
+
+            body += `-----------------------------------------------------------\n`;
+            body += ` 4. PERSONALIZACIÓN Y EXTRAS ADICIONALES\n`;
+            body += `-----------------------------------------------------------\n`;
+            if (data.extras.length > 0) {
+                data.extras.forEach(item => {
+                    body += ` [X] ${item.label.padEnd(22, ' ')} : +$${item.price} USD/mes\n`;
+                });
+            } else {
+                body += ` (Sin servicios adicionales seleccionados)\n`;
             }
 
-            const emailNombre = document.getElementById('nombre').value.trim();
-            document.getElementById('fs-subject').value = `Solicitud de Arrendamiento - ${emailNombre}`;
+            if (data.comentarios) {
+                body += `\nNotas / Peticiones Especiales:\n${data.comentarios}\n`;
+            }
 
-            // Generar resumen conciso para el correo
-            let resumen = `Solicitante: ${emailNombre}\n`;
-            resumen += `ID: ${document.getElementById('id').value.trim()}\n`;
-            resumen += `Teléfono: ${document.getElementById('telefono').value.trim()}\n`;
-            resumen += `Correo: ${document.getElementById('email').value.trim()}\n`;
-            resumen += `Empresa: ${document.getElementById('empresa').value.trim()}\n`;
-            resumen += `Ingreso Neto: $${document.getElementById('ingreso').value}\n`;
-            resumen += `Duración: ${selectDuracion.value}\n`;
-            resumen += `Monto Calculado: ${inputTotal.value}\n`;
+            body += `\n-----------------------------------------------------------\n`;
+            body += ` 5. DESGLOSE ECONÓMICO Y RENTA FINAL ESTIMADA\n`;
+            body += `-----------------------------------------------------------\n`;
+            body += ` Renta Base Acordada        : $${data.rentaBase} USD\n`;
+            body += ` Total Servicios Extras     : $${data.totalExtras} USD\n`;
+            body += ` ---------------------------------------------------------\n`;
+            body += ` MONTO TOTAL       : $${data.totalCalculado} USD * Mes\n`;
+            body += ` Depósito Requerido         : $500 USD\n\n`;
 
-            document.getElementById('input-mensaje-completo').value = resumen;
+            body += `-----------------------------------------------------------\n`;
+            body += ` 6. DECLARACIÓN Y ACEPTACIÓN DE TÉRMINOS\n`;
+            body += `-----------------------------------------------------------\n`;
+            body += `[ACEPTADO] Certifico que los datos provistos son correctos y veraz.\n`;
+            body += `[ACEPTADO] Acepto la política de NO MASCOTAS. Por razones de espacio y tranquilidad comunitaria, no se permiten de ningún tipo.\n`;
+            body += `[ACEPTADO] Acepto la estricta prohibición del uso o consumo de sustancias ilícitas en la propiedad.\n\n`;
+            body += `===========================================================\n`;
+            body += `                  Alquiler Estudio 10 x 20\n`;
+            body += `===========================================================\n`;
+
+            return body;
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            // El formulario se enviará de forma nativa a FormSubmit
+            if (!validateStep(4)) return;
+
+            const emailDestino = 'rentstd.2026@gmail.com';
+            const duracionText = selectDuracion.value;
+            const baseRent = getBaseRentPrice(duracionText);
+
+            let selectedExtras = [];
+            let totalExtrasSum = 0;
+
+            calcCheckboxes.forEach(cb => {
+                if (cb.checked) {
+                    const price = parseInt(cb.getAttribute('data-price'));
+                    const label = cb.getAttribute('data-label');
+                    selectedExtras.push({ label, price });
+                    totalExtrasSum += price;
+                }
+            });
+
+            const formData = {
+                nombre: document.getElementById('nombre').value.trim(),
+                id: document.getElementById('id').value.trim(),
+                telefono: document.getElementById('telefono').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                empresa: document.getElementById('empresa').value.trim(),
+                cargo: document.getElementById('cargo').value.trim(),
+                tiempoEmpleo: document.getElementById('tiempo_empleo').value,
+                telefonoEmpleador: document.getElementById('telefono_empleador').value.trim(),
+                ingreso: document.getElementById('ingreso').value,
+                ingresosAdicionales: document.getElementById('ingresos_adicionales').value.trim(),
+                duracion: duracionText,
+                personas: document.getElementById('personas').value,
+                comentarios: document.getElementById('comentarios').value.trim(),
+                rentaBase: baseRent,
+                totalExtras: totalExtrasSum,
+                totalCalculado: inputTotal.value,
+                extras: selectedExtras
+            };
+
+            const mailBody = buildEmailBody(formData);
+            const mailSubject = `Solicitud de Arrendamiento - ${formData.nombre}`;
+
+            // Actualizar campos ocultos de FormSubmit
+            document.getElementById('formsubmit-subject').value = mailSubject;
+            document.getElementById('formsubmit-message').value = mailBody;
+
+            // Enlace de respaldo mailto para el botón secundario
+            const linkMailto = `mailto:${emailDestino}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
+            document.getElementById('btn-resend-mail').href = linkMailto;
+
+            // Envío AJAX mediante fetch a FormSubmit
+            const submitData = new FormData(form);
+
+            fetch("https://formsubmit.co/ajax/rentstd.2026@gmail.com", {
+                method: 'POST',
+                body: submitData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                document.getElementById('form-content').style.display = 'none';
+                document.getElementById('success-screen').classList.remove('hidden');
+            })
+            .catch(error => {
+                // Respaldo por si falla la conexión de red
+                window.location.href = linkMailto;
+                document.getElementById('form-content').style.display = 'none';
+                document.getElementById('success-screen').classList.remove('hidden');
+            });
         });
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swCode = `
+                    self.addEventListener('install', (e) => self.skipWaiting());
+                    self.addEventListener('activate', (e) => self.clients.claim());
+                    self.addEventListener('fetch', (e) => e.respondWith(fetch(e.request).catch(() => new Response("Offline"))));
+                `;
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+            });
+        }
 
         updateUI();
     </script>
